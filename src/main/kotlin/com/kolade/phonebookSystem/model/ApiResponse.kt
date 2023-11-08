@@ -6,8 +6,8 @@ import lombok.Data
 //import javax.validation.constraints.NotNull;
 @Data
 @AllArgsConstructor
-class ApiResponse(//    @NotNull
-    private val success: Boolean, private val message: String
+class ApiResponse(
+    private val success: Boolean, private val message: String, private val data: Any? = null
 ) {
-    private val data: Any? = null
+
 }
