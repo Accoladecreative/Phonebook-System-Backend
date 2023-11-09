@@ -29,8 +29,9 @@ class ContactController(@Autowired val contactRepository: ContactRepository) {
     }
 
     @GetMapping("/{phoneNumber}")
-    fun getContact(@PathVariable phoneNumber: String): ApiResponse {
-        return contactRepository.getContactByPhoneNumber(phoneNumber)
+    fun getContact(@PathVariable phoneNumber: String): String {
+        return phoneNumber
+//        return contactRepository.getContactByPhoneNumber(phoneNumber)
     }
 
     @GetMapping("/all")

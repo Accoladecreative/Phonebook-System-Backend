@@ -13,48 +13,52 @@ class DefaultController {
     fun rootUrl(): ApiResponse {
         return ApiResponse(true, "Connection Successful, kindly use this guide to navigate the app",ContactControllerDocumentation )
     }
+    @GetMapping("/hi")
+    fun root2():String{
+        return "Hello there, wellcome";
+    }
 
     object ContactControllerDocumentation {
 
-        val getAllContactsDescription = "Get a list of all contacts."
-        val getAllContactsEndpoint = "GET /api/v1/contacts"
+        val getAllContactsDescription = "Get a list of all contacts.\n"
+        val getAllContactsEndpoint = "GET /api/contacts"
         val getAllContactsExample = """
         Example:
-        - Request: GET /api/v1/contacts
+        - Request: GET /api/contacts
         - Response: Retrieves a list of all contacts in the system.
-    """.trimIndent()
+    """.trimIndent()+"\n"
 
         val createContactDescription = "Create a new contact."
-        val createContactEndpoint = "POST /api/v1/contacts"
+        val createContactEndpoint = "POST /api/contacts"
         val createContactExample = """
         Example:
-        - Request: POST /api/v1/contacts
+        - Request: POST /api/contacts
           Body: { "name": "John Doe", "phoneNumber": "1234567890", "email": "john@example.com" }
         - Response: Creates a new contact with the provided information.
     """.trimIndent()
 
         val deleteContactDescription = "Delete a contact by ID."
-        val deleteContactEndpoint = "DELETE /api/v1/contacts/{id}"
+        val deleteContactEndpoint = "DELETE /api/contacts/{id}"
         val deleteContactExample = """
         Example:
-        - Request: DELETE /api/v1/contacts/1
+        - Request: DELETE /api/contacts/1
         - Response: Deletes the contact with ID 1 from the system.
     """.trimIndent()
 
         val updateContactDescription = "Update an existing contact by ID."
-        val updateContactEndpoint = "PUT /api/v1/contacts/{id}"
+        val updateContactEndpoint = "PUT /api/contacts/{id}"
         val updateContactExample = """
         Example:
-        - Request: PUT /api/v1/contacts/1
+        - Request: PUT /api/contacts/1
           Body: { "name": "Updated Name", "phoneNumber": "9876543210", "email": "updated@example.com" }
         - Response: Updates the contact with ID 1 using the provided information.
     """.trimIndent()
 
         val getContactByPhoneNumberDescription = "Get a contact by phone number."
-        val getContactByPhoneNumberEndpoint = "GET /api/v1/contacts/phone/{phoneNumber}"
+        val getContactByPhoneNumberEndpoint = "GET /api/contacts/phone/{phoneNumber}"
         val getContactByPhoneNumberExample = """
         Example:
-        - Request: GET /api/v1/contacts/phone/1234567890
+        - Request: GET /api/contacts/phone/1234567890
         - Response: Retrieves the contact with phone number 1234567890.
     """.trimIndent()
     }
