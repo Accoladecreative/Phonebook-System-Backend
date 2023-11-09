@@ -1,27 +1,29 @@
 package com.kolade.phonebookSystem.repository
-
 import com.kolade.phonebookSystem.model.Contact
 import com.kolade.phonebookSystem.model.ApiResponse
-import java.util.*
-import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 
 @Repository
-interface ContactRepository : JpaRepository<Contact, Long> {
-
-    fun findByPhoneNumber(phoneNumber: String): Contact?
+class ContactRepository {
+    private var contacts: MutableList<Contact> = mutableListOf()
+    private var nextId: Long = 1
 
     fun saveContact(contact: Contact): ApiResponse {
-        return if (findByPhoneNumber(contact.phoneNumber) == null) {
-            save(contact)
-            ApiResponse(success = true, message = "Contact created successfully")
-        } else {
-            ApiResponse(success = false, message = "Duplicate phone number")
+        // Check for duplicate phone numbers
+        if (contacts.any { it.phoneNumber == contact.phoneNumber }) {
+            return ApiResponse(success = false, message = "Duplicate phone number")
         }
+
+        // Assign a unique ID and add the contact
+        contact.id = nextId
+        contacts.add(contact)
+        nextId++
+
+        return ApiResponse(success = true, message = "Contact created successfully")
     }
 
     fun getContactByPhoneNumber(phoneNumber: String): ApiResponse {
-        val contact = findByPhoneNumber(phoneNumber)
+        val contact = contacts.find { it.phoneNumber == phoneNumber }
         return if (contact != null) {
             ApiResponse(success = true, message = "Contact found", data = contact)
         } else {
@@ -30,15 +32,16 @@ interface ContactRepository : JpaRepository<Contact, Long> {
     }
 
     fun getAllContacts(): ApiResponse {
-        val contacts = findAll()
         return ApiResponse(success = true, message = "All contacts retrieved", data = contacts)
     }
 
     fun updateContact(phoneNumber: String, updatedContact: Contact): ApiResponse {
-        val existingContact = findByPhoneNumber(phoneNumber)
+        var existingContact = contacts.find { it.phoneNumber == phoneNumber }
         return if (existingContact != null) {
-            updatedContact.id = existingContact.id // Ensure the ID is retained
-            save(updatedContact)
+            // Update the contact's fields
+//            existingContact.name = updatedContact.name
+//            existingContact.email = updatedContact.email
+
             ApiResponse(success = true, message = "Contact updated successfully")
         } else {
             ApiResponse(success = false, message = "Contact not found")
@@ -46,9 +49,9 @@ interface ContactRepository : JpaRepository<Contact, Long> {
     }
 
     fun deleteContactByPhoneNumber(phoneNumber: String): ApiResponse {
-        val contact = findByPhoneNumber(phoneNumber)
+        var contact = contacts.find { it.phoneNumber == phoneNumber }
         return if (contact != null) {
-            delete(contact)
+            contacts.remove(contact)
             ApiResponse(success = true, message = "Contact deleted successfully")
         } else {
             ApiResponse(success = false, message = "Contact not found")
